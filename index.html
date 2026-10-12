@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vitrine — protótipo navegável</title>
+<style>
+:root{--accent:#3977e8;--bg:#f5f7fb;--ink:#202638;--muted:#687187;--line:#e3e8f1}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:950px;margin:auto;padding:18px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-weight:900;font-size:23px}.brand span{color:var(--accent)}a,button{cursor:pointer}
+.btn,button{border:0;border-radius:12px;padding:12px 16px;background:var(--accent);color:#fff;font-weight:bold;text-decoration:none;display:inline-block}
+.secondary{background:white!important;color:var(--ink)!important;border:1px solid var(--line)!important}
+.card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;margin:14px 0;box-shadow:0 8px 25px #2026380a}
+.muted{color:var(--muted);line-height:1.6}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.field{display:block;margin:12px 0;font-weight:bold}.field input,.field select{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.notice{background:#fff6dd;border:1px solid #f0dfa9;color:#76550a;border-radius:12px;padding:13px;line-height:1.5}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}.swatches button{width:38px;height:38px;padding:0;border:3px solid white;box-shadow:0 0 0 1px #ccc}
+.preview{padding:18px;border-radius:15px;background:white;border:1px solid var(--line);border-top:5px solid var(--accent)}
+.pill{display:inline-block;background:#e8f7ef;color:#167451;border-radius:30px;padding:6px 10px;font-size:13px;font-weight:bold}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.nav button{flex:1;min-width:145px}.nav button.active{outline:3px solid #3977e833}
+.view[hidden]{display:none!important}.stats{font-size:28px;font-weight:800;margin:8px 0}.small{font-size:13px}
+@media(max-width:500px){.wrap{padding:12px}.card{padding:16px}.top .pill{margin-left:auto}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">vitrine<span>.</span></div>
+    <span class="pill">PROTÓTIPO V1</span>
+  </header>
+  <nav class="nav" aria-label="Navegação do protótipo">
+    <button class="active" data-view="home">Início</button>
+    <button data-view="seller">Área do vendedor</button>
+    <button data-view="admin">Meu monitoramento</button>
+  </nav>
+
+  <main id="home" class="view">
+    <section class="card" style="padding:28px">
+      <p class="pill">Sua ideia de plataforma</p>
+      <h1>Uma plataforma. Várias lojas.</h1>
+      <p class="muted">Demonstração navegável: escolha uma área nos botões acima. Os painéis estão reunidos nesta página para evitar que os links internos falhem no visualizador do celular.</p>
+    </section>
+    <div class="grid">
+      <section class="card"><h2>🛍️ Área de quem vende</h2><p class="muted">Simule a edição de uma loja, cores e contatos.</p><button onclick="showView('seller')">Entrar na demonstração do vendedor</button></section>
+      <section class="card"><h2>🔐 Seu monitoramento</h2><p class="muted">Prévia visual da área administrativa.</p><button class="secondary" onclick="showView('admin')">Entrar na demonstração administrativa</button></section>
+    </div>
+    <div class="notice"><b>Importante:</b> este arquivo é um protótipo local. Não possui login real, banco de dados ou proteção contra invasões. Não digite senhas reais nem dados privados.</div>
+  </main>
+
+  <section id="seller" class="view" hidden>
+    <div class="top"><div><h1>🛍️ Área do vendedor</h1><p class="muted">Personalize uma prévia da sua loja.</p></div><button class="secondary" onclick="showView('home')">Voltar ao início</button></div>
+    <section class="card">
+      <label class="field">Nome da loja<input id="shopName" value="Minha loja" oninput="refreshShop()"></label>
+      <label class="field">WhatsApp da loja<input id="shopWhatsApp" placeholder="DDD + número" oninput="refreshShop()"></label>
+      <label class="field">Instagram da loja<input id="shopInstagram" placeholder="@sualoja" oninput="refreshShop()"></label>
+      <label class="field">Tipo de negócio<select id="shopType" onchange="refreshShop()"><option>Loja de roupas</option><option>Acessórios</option><option>Cosméticos</option><option>Eletrônicos</option><option>Alimentos</option><option>Outro</option></select></label>
+      <div class="field">Escolha a cor da loja</div>
+      <div class="swatches">
+        <button aria-label="Azul" style="background:#3977e8" onclick="setColor('#3977e8')"></button>
+        <button aria-label="Verde" style="background:#168568" onclick="setColor('#168568')"></button>
+        <button aria-label="Rosa" style="background:#d65a83" onclick="setColor('#d65a83')"></button>
+        <button aria-label="Laranja" style="background:#e69b32" onclick="setColor('#e69b32')"></button>
+        <button aria-label="Escuro" style="background:#282c38" onclick="setColor('#282c38')"></button>
+      </div>
+      <p><button onclick="refreshShop()">Atualizar prévia</button></p>
+    </section>
+    <section class="card"><h2>Prévia da loja</h2><div class="preview"><h2 id="previewName">Minha loja</h2><p class="muted" id="previewType">Loja de roupas</p><p id="previewContacts" class="muted">Adicione os contatos da loja para exibi-los aqui.</p><span class="pill">Vitrine de demonstração</span><p class="small muted">Os produtos aparecerão aqui quando a funcionalidade for desenvolvida.</p></div></section>
+    <div class="notice">Demonstração apenas: as alterações não são salvas e não são publicadas. O sistema real precisará de conta individual e proteção no servidor.</div>
+  </section>
+
+  <section id="admin" class="view" hidden>
+    <div class="top"><div><h1>🔐 Meu monitoramento</h1><p class="muted">Prévia do painel do proprietário da plataforma.</p></div><button class="secondary" onclick="showView('home')">Voltar ao início</button></div>
+    <section class="card">
+      <h2>Painel administrativo (exemplo)</h2>
+      <p class="muted">Nesta demonstração, o botão abaixo apenas mostra números ilustrativos. Não é um login seguro.</p>
+      <label class="field">E-mail de administrador (somente exemplo)<input type="email" placeholder="Não precisa preencher"></label>
+      <label class="field">Senha de demonstração<input type="password" placeholder="Não digite sua senha real"></label>
+      <button onclick="document.getElementById('adminDemo').hidden=false">Ver painel de exemplo</button>
+      <div id="adminDemo" hidden>
+        <hr>
+        <div class="grid">
+          <div class="card"><div class="muted">Lojas cadastradas</div><div class="stats">0</div></div>
+          <div class="card"><div class="muted">Assinaturas ativas</div><div class="stats">0</div></div>
+          <div class="card"><div class="muted">Alertas</div><div class="stats">0</div></div>
+        </div>
+        <p class="muted">Números ilustrativos: ainda não vêm de dados reais.</p>
+      </div>
+    </section>
+    <div class="notice"><b>Segurança:</b> esta página não protege um painel real. Antes de lançar, precisamos implementar autenticação no servidor, permissões exclusivas de administrador, isolamento dos dados de cada vendedor, limite de tentativas e backups.</div>
+  </section>
+  <footer class="muted small">Protótipo particular • versão demonstrativa • sem dados persistentes</footer>
+</div>
+<script>
+function showView(id){
+  document.querySelectorAll('.view').forEach(el=>el.hidden=el.id!==id);
+  document.querySelectorAll('[data-view]').forEach(btn=>btn.classList.toggle('active',btn.dataset.view===id));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>showView(btn.dataset.view)));
+function refreshShop(){
+  const name=document.getElementById('shopName').value.trim()||'Minha loja';
+  const wa=document.getElementById('shopWhatsApp').value.trim();
+  const ig=document.getElementById('shopInstagram').value.trim();
+  document.getElementById('previewName').textContent=name;
+  document.getElementById('previewType').textContent=document.getElementById('shopType').value;
+  const contacts=[];
+  if(wa) contacts.push('WhatsApp: '+wa);
+  if(ig) contacts.push('Instagram: '+ig);
+  document.getElementById('previewContacts').textContent=contacts.join(' • ')||'Adicione os contatos da loja para exibi-los aqui.';
+}
+function setColor(color){document.documentElement.style.setProperty('--accent',color)}
+</script>
+</body>
+</html>
